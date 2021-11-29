@@ -28,28 +28,29 @@ impl App {
 
         // Create the DOM nodes
         html!("div", {
-                    .children(&mut [
-                        html!("bx-header", {
-                            .attr("aria-label", "foo")
-                            .child(html!("bx-header-name", {
-                                .attr("prefix", "WasmTool")
-                                .text("GUI")
-                            }))
-                        }),
-                        match app.route.read_only().get() {
-
-                            Route::PickWasmModule => Home::render(app.clone()),
-                            Route::Completed => Home::render(app.clone()),
-                            Route::Home => Home::render(app.clone()),
-        }
-                    ])
-                    .future(routing::url()
-                        .signal_ref(|url| Route::from_url(url))
-                        .for_each(clone!(app => move |route| {
-                            app.route.set_neq(route);
-                            async {}
-                        })))
-                    })
+            .children(&mut [
+                    html!("bx-header", {
+                        .attr("aria-label", "foo")
+                        .child(html!("bx-header-name", {
+                            .attr("prefix", "WasmTool")
+                            .text("GUI")
+                        }))
+                    }),
+                    match app.route.read_only().get() {
+                        Route::PickWasmModule => Home::render(app.clone()),
+                        Route::Completed => Home::render(app.clone()),
+                        Route::Home => Home::render(app.clone()),
+                    }
+                ]
+            )
+            .future(routing::url()
+                .signal_ref(|url| Route::from_url(url))
+                .for_each(clone!(app => move |route| {
+                    app.route.set_neq(route);
+                    async {}
+                })
+            ))
+        })
     }
 
     pub fn route(&self) -> impl Signal<Item = Route> {
