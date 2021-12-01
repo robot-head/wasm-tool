@@ -37,9 +37,9 @@ impl App {
                         }))
                     }),
                     match app.route.read_only().get() {
-                        Route::PickWasmModule => Home::render(app.clone()),
-                        Route::Completed => Home::render(app.clone()),
-                        Route::Home => Home::render(app.clone()),
+                        Route::PickWasmModule => Home::render(app.home.clone(), app.clone()),
+                        Route::Completed => Home::render(app.home.clone(), app.clone()),
+                        Route::Home => Home::render(app.home.clone(), app.clone()),
                     }
                 ]
             )
