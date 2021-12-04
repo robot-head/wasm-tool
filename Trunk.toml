@@ -16,12 +16,5 @@ dist = "dist"
 cargo = false
 
 [[proxy]]
-backend = "ws://localhost:9000/api/ws"
-ws = true
-
-[[proxy]]
-rewrite = "/api/v1/"
-backend = "http://localhost:9000/"
-
-[[proxy]]
-backend = "http://localhost:9000/api/v2/"
+rewrite = "/api/"
+backend = "http://localhost:8081/"

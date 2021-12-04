@@ -2,7 +2,7 @@ use crate::App;
 use dominator::{clone, events, html, with_node, Dom};
 use futures_signals::signal::Mutable;
 use std::sync::Arc;
-
+use wasm_bindgen_futures::{spawn_local, JsFuture};
 #[derive(Default, Debug, Clone)]
 pub struct Home {
     path: Mutable<String>,
@@ -22,7 +22,13 @@ impl Home {
             html!("bx-btn", {
               .text("Choose WASM module")
               .event(clone!(home => move |_: events::Click| {
-                home.path.replace_with(|_| "/some/path".to_string());
+                spawn_local(clone!(home => async move {
+                  // Todo
+                  let resp = reqwest::get("http://localhost:8080/api/pick_module").await.unwrap();
+                  let text = resp.text().await.unwrap();
+                  home.path.replace_with(|_| text);
+                }));
+
               }))
             })
           ])
